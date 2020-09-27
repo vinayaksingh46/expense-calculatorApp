@@ -1,0 +1,162 @@
+<!-- <!DOCTYPE html> -->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <script
+			defer
+			src="https://use.fontawesome.com/releases/v5.7.2/js/all.js"
+			integrity="sha384-0pzryjIRos8mFBWMzSSZApWtPl/5++eIfzYmTgBBmXYdhvxPc+XcFEk+zJwDgWbP"
+			crossorigin="anonymous"
+		></script>
+    <title>Personal Expense Manager</title>
+        
+</head>
+<body>
+    <nav class="navbar navbar-dark bg-dark">
+        <span class="navbar-brand mb-0 h1">Vinayak's Expense Manager</span>
+    </nav>
+    <div class="container-fluid bg-light" style="min-height: 100vh">
+        <div class="container">
+            <div class="jumbotron mt-4">
+                <div class="input-group mb-3">
+                    <input
+                        type="text"
+                        class="form-control"
+                        id="addExpenseToTotal"
+                        placeholder="Amount spent"
+                        aria-label="Amount spent"
+                        aria-describedby="spent in rupee"
+                    />
+                    <div class="input-group-append">
+                        <span class="input-group-text" id="spent in rupee">₹</span>
+                    </div>
+                </div>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="spent at">@</span>
+                    </div>
+                    <input
+                        type="text"
+                        class="form-control"
+                        id="expenseDesc"
+                        onfocus="this.value=''"
+                        placeholder="spent On"
+                        aria-label="spent On"
+                        aria-describedby="spent at"
+                    />
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-primary" type="button" id="button-addon2">Add</button>
+                    </div>
+                </div>
+            </div>
+            
+                
+            <h3 id = "TotalExpense"></h3> 
+            
+            
+            <div>
+                <ul class="list-group" id ="ExpenseDetails">
+                                 
+                </ul>
+            </div>
+                      
+           
+        </div>
+    </div>
+
+    <script>
+       
+        const expenseEl = document.querySelector("#TotalExpense")
+
+        const expenseDescEl = document.querySelector("#expenseDesc")
+
+        const expenseTableEl = document.querySelector("#ExpenseDetails")
+        
+        let totalExpense =0;
+        expenseEl.textContent=totalExpense
+
+        let expenseArr=[]
+
+        function addExpenseToTotal(){
+            let expenseObj ={}
+
+            const amountElement = document.querySelector("#addExpenseToTotal")
+            const textAmount = amountElement.value 
+            const intExpense = parseInt(textAmount,10)
+            expenseObj.amount=intExpense
+
+            const textDesc =expenseDescEl.value
+            expenseObj.desc=textDesc
+
+            expenseObj.SpentDate = new Date()
+            
+            expenseArr.push(expenseObj)         
+                
+            renderListItem(expenseArr)
+        }
+
+
+        const btnElement=document.querySelector("#button-addon2")
+        btnElement.addEventListener("click",addExpenseToTotal,false)
+
+        //Render page function
+        function renderListItem(arrayPassed){
+            totalExpense=0
+            const expenseArrayHTML=arrayPassed.map(expense => createHtmlListView(expense))
+            const joinedHTMLExpenseArray = expenseArrayHTML.join("")
+            expenseTableEl.innerHTML=joinedHTMLExpenseArray
+            
+            const calculateTotal = arrayPassed.map(expense => totalExpense=totalExpense+expense.amount)            
+            expenseEl.textContent='Total = '+totalExpense
+                    
+        }
+        //Delete items from the list
+        function deleteItem (momentOfItem) {
+            newExpenseArr=[]
+            console.log("Delete Item is being called", momentOfItem)
+            for(i=0;i<expenseArr.length;i++)
+            {
+                if(expenseArr[i].SpentDate.valueOf() === momentOfItem)
+                {
+                   expenseArr.pop(i-1)
+                }
+            }
+            renderListItem(expenseArr)
+        }
+        //get date in required format
+        function getDateString(spentonDate)
+        {
+            return spentonDate.toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric',hour :"numeric",minute :"numeric",second:"numeric"} )
+        }
+
+        //View layers
+
+        function createHtmlListView ( { amount,SpentDate,desc} ) {
+            return `
+                    <li class="list-group-item d-flex justify-content-between">
+                        <div class="d-flex flex-column">
+                            ${desc}
+                            <small class="text-muted">${getDateString(SpentDate)}</small>
+                        </div>
+                        <div>
+                            <span class="px-5">
+                                ${amount}
+                            </span>
+                            <button 
+                                id="deleteOnClick"
+                                type="button" 
+                                class="btn btn-outline-danger btn-sm"
+                                onclick="deleteItem(${SpentDate.valueOf()})"
+                                >
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </div>
+                    </li>`
+
+           }
+
+    </script>
+</body>
+</html>
