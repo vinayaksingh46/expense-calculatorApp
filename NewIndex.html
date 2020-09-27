@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <title>Personal Expense Manager</title>
+    <style>
+        body{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 80vh;
+        }
+
+    </style>
+    
+</head>
+<body>
+
+
+    <h1 id = "TotalExpense"></h1>
+
+
+    <input id="expenseDesc" type ="text" name="expenseDesc" >
+
+    <input id="addExpenseToTotal" type="text" name="addExpenseToTotal">
+    <h5 id ="ExpenseDetails"></h5>
+    
+    <br>
+<!-- </input> -->
+    <button id="btnAdd">+</button>
+
+    <script>
+       
+        const expenseEl = document.querySelector("#TotalExpense")
+
+        const expenseDescEl = document.querySelector("#expenseDesc")
+
+        const expenseTableEl = document.querySelector("#ExpenseDetails")
+        
+        let totalExpense =0;
+        expenseEl.textContent=totalExpense
+
+        let expenseArr=[]
+
+        function addExpenseToTotal(){
+            let expenseObj ={}
+
+            const amountElement = document.querySelector("#addExpenseToTotal")
+            const textAmount = amountElement.value 
+            const intExpense = parseInt(textAmount,10)
+            expenseObj.amount=intExpense
+
+            const textDesc =expenseDescEl.value
+            expenseObj.desc=textDesc
+
+            expenseArr.push(expenseObj)
+            // console.table(expenseArr)
+           
+            totalExpense=totalExpense+intExpense
+            expenseEl.textContent=totalExpense
+            
+
+            const expenseArrayHTML=expenseArr.map(expense => {
+            return `<div> ${expense.desc} :: ${expense.amount} </div>`
+            });
+
+            const joinedHTMLExpenseArray = expenseArrayHTML.join("")
+
+            console.log(joinedHTMLExpenseArray)
+
+            expenseTableEl.innerHTML=joinedHTMLExpenseArray
+        }
+
+        const btnElement=document.querySelector("#btnAdd")
+        
+        btnElement.addEventListener("click",addExpenseToTotal,false)
+
+    </script>
+</body>
+</html>
